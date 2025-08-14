@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import com.abimulia.ai.function.WeatherConfigProperties;
@@ -21,6 +22,12 @@ import com.abimulia.ai.function.WeatherConfigProperties;
  * 
  * Copyright(c) 2025 Abi Mulia
  */
+
+/**
+ * Service untuk memanggil WeatherAPI dan mengembalikan data cuaca.
+ * Mengimplementasikan Function<Request, Response> agar bisa digunakan di ToolCallback.
+ */
+@Service
 public class WeatherService implements Function<WeatherService.Request, WeatherService.Response>{
 	
 	private static final Logger log = LoggerFactory.getLogger(WeatherService.class);
@@ -46,7 +53,7 @@ public class WeatherService implements Function<WeatherService.Request, WeatherS
     }
 
 	
-	 public record Request(String city) {}
+	 	public record Request(String city) {}
 	    public record Response(Location location,Current current) {}
 	    public record Location(String name, String region, String country, Long lat, Long lon){}
 	    public record Current(String temp_f, Condition condition, String wind_mph, String humidity) {}

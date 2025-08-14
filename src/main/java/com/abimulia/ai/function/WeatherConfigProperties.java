@@ -6,6 +6,7 @@ package com.abimulia.ai.function;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+
 /**
  * @author abimu
  *
@@ -16,7 +17,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Copyright(c) 2025 Abi Mulia
  */
 
-@ConfigurationProperties(value="weather")
+/**
+ * Membaca konfigurasi prefix "weather" dari application.properties.
+ * Contoh:
+ * weather.api-key=...
+ * weather.api-url=...
+ */
+@ConfigurationProperties(prefix="weather")
 public record WeatherConfigProperties(String apiKey,String apiUrl) {
 
 }
