@@ -1,4 +1,10 @@
 # Spring AI with Ollama
+
+[![Spring Boot v3.5.4](https://img.shields.io/badge/Java-SpringBoot-green)](https://spring.io/)
+[![Spring AI 1.0.1](http://img.shields.io/:AI-SpringAI-orange.svg)](https://docs.spring.io/spring-ai/reference/index.html)
+[![Ollama](http://img.shields.io/:LLM-Ollama-brown.svg)](https://ollama.com/)
+[![License](http://img.shields.io/:license-Apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
 Spring AI project to access local LLM Ollama to accept NLP request.
 Integrate to Weather API to get the current weather  
 This project inspired by *Dan Vega* tutorial [Getting Started with Ollama, Llama 3.1 and Spring AI](https://www.youtube.com/watch?v=dffEF9ORVUg&t=879s), with the changes to adapt to new Spring AI 1.0.1 and Spring Boot 3.5.4  
