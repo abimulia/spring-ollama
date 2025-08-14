@@ -6,12 +6,15 @@ package com.abimulia.ai.service;
 
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.abimulia.ai.function.WeatherConfigProperties;
+
+import lombok.extern.slf4j.Slf4j;
+
+
 
 /**
  * @author abimu
@@ -28,34 +31,43 @@ import com.abimulia.ai.function.WeatherConfigProperties;
  * Mengimplementasikan Function<Request, Response> agar bisa digunakan di ToolCallback.
  */
 @Service
+@Slf4j
 public class WeatherService implements Function<WeatherService.Request, WeatherService.Response>{
 	
-	private static final Logger log = LoggerFactory.getLogger(WeatherService.class);
-	private final RestClient restClient;
+	
+	private final WebClient webClient;
 	private final WeatherConfigProperties weatherProps;
 	
 	public WeatherService(WeatherConfigProperties props) {
 		this.weatherProps = props;
 		log.info("Weather API URL: {}", weatherProps.apiUrl());
         log.info("Weather API Key: {}", weatherProps.apiKey());
-        this.restClient = RestClient.create(weatherProps.apiUrl());
+        this.webClient = WebClient.builder()
+        		.baseUrl(weatherProps.apiUrl())
+        		.build();
 	}
 	
 	@Override
     public Response apply(Request weatherRequest) {
         log.info("Weather Request: {}",weatherRequest);
-        Response response = restClient.get()
-                .uri("/current.json?key={key}&q={q}", weatherProps.apiKey(), weatherRequest.city())
+        Response response = webClient.get()
+        		.uri(uriBuilder -> uriBuilder
+                		.path("/current.json")
+                        .queryParam("key", weatherProps.apiKey())
+                        .queryParam("q", weatherRequest.city())
+                        .build())
+        		.accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(Response.class);
-        log.info("Weather API Response: {}", response);
+                .bodyToMono(Response.class)
+                .doOnNext(r -> log.info("Weather API Response: {}", r))
+                .block(); // HTTP non-blocking
         return response;
     }
 
 	
 	 	public record Request(String city) {}
 	    public record Response(Location location,Current current) {}
-	    public record Location(String name, String region, String country, Long lat, Long lon){}
+	    public record Location(String name, String region, String country, Double lat, Double lon){}
 	    public record Current(String temp_f, Condition condition, String wind_mph, String humidity) {}
 	    public record Condition(String text){}
 

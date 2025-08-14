@@ -8,6 +8,10 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abimulia.ai.service.WeatherService;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author abimu
  *
@@ -19,17 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@Slf4j
 public class ChatController {
 	
 	private final ChatClient chatClient;
 	
 
 	public ChatController(ChatClient.Builder chatClient) {
+		log.debug("ChatController(): {}", chatClient);
 		this.chatClient = chatClient.build();
 	}
 	
 	@GetMapping("")
 	public String joke() {
+		log.debug("joke()");
 		return chatClient.prompt()
 				.user("Please tell me a dad joke about computers")
 				.call()

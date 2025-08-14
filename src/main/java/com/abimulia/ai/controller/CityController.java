@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Function;
 /**
@@ -26,12 +27,13 @@ import java.util.function.Function;
 
 @RestController
 @RequestMapping("/city")
-@Log
+@Slf4j
 public class CityController {
 	
 	private final ChatClient chatClient;
 	
 	public CityController(ChatClient.Builder builder,ToolCallback currentWeatherTool ) {
+		log.debug("CityController(): {}", builder, currentWeatherTool);
         this.chatClient = builder
                 .defaultSystem("""
                 		You are a helpful AI Assistant answering questions about cities around the world.
@@ -44,6 +46,7 @@ public class CityController {
 	
 	@GetMapping("/ask")
 	public String askCityQuestion(@RequestParam String message) {
+		log.debug("askCityQuestion(): {} ", message);
 		return chatClient.prompt()
 				.user(message)
 				.call()

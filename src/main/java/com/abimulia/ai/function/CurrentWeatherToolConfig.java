@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.abimulia.ai.service.WeatherService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author abimu
  *
@@ -26,9 +28,11 @@ import com.abimulia.ai.service.WeatherService;
  * Tool ini akan dipanggil otomatis jika AI mendeteksi perlu data cuaca.
  */
 @Configuration
+@Slf4j
 public class CurrentWeatherToolConfig {
 	@Bean
 	public ToolCallback currentWeatherTool(WeatherService service) {
+		log.debug("currentWeatherTool(): {} ", service);
 		return FunctionToolCallback.builder("currentWeatherFunction", service)
 				.description("Get current weather information for a given city")
 				.inputType(WeatherService.Request.class)
